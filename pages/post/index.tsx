@@ -1,6 +1,7 @@
 import React from "react";
-import { getPosts } from '../../lib/post';
+import {getArticle, getPosts} from '../../lib/post';
 import {NextPage} from 'next';
+import Link from "next/link";
 
 type Props = {
     posts: {
@@ -11,9 +12,13 @@ type Props = {
 }
 
 const Post: NextPage<Props> =  (props) => {
-    console.log(props.posts)
+    const { posts } = props
     return (<div>
-        这是个post页面
+        {
+            posts.map(post => <Link href={`/post/${post.id}`} key={post.id}>
+                <a>{post.title}</a>
+            </Link>)
+        }
     </div>)
 }
 
@@ -24,14 +29,6 @@ export const getStaticProps = async () => {
             posts: JSON.parse(JSON.stringify(posts))
         }
     }
-    // // Get external data from the file system, API, DB, etc.
-    // const data = ...
-    //
-    // // The value of the `props` key will be
-    // //  passed to the `Home` component
-    // return {
-    //     props: ...
-    // }
 }
 
 export default Post

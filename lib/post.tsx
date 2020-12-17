@@ -19,3 +19,13 @@ export const getPosts = async () => {
     })
     return posts
 }
+
+export const getArticle = async (id : any) => {
+    const text = fs.readFileSync(path.join(mdPath, `${id}.md`), 'utf-8')
+    const {data: { title, date } , content} = matter(text)
+    return {
+        title,
+        date,
+        content
+    }
+}
