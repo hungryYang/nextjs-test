@@ -1,23 +1,22 @@
-import fs, { promises as fsPromise } from 'fs';
+import fs, {promises as fsPromise} from 'fs';
 import path from 'path';
-import matter from 'gray-matter'
+import matter from 'gray-matter';
 
 const publicPath = process.cwd()
 const mdPath = path.join(publicPath, '/markdown');
 
 export const getPosts = async () => {
     const files = await fsPromise.readdir(mdPath)
-    const posts = files.map(file => {
+    return files.map(file => {
         const text = fs.readFileSync(path.join(mdPath, file), 'utf-8')
         const id = file.replace(/\.md$/g, '')
-        const {data: { title, date} , content} = matter(text)
+        const {data: {title, date}} = matter(text)
         return {
             id,
             title,
             date
         }
     })
-    return posts
 }
 
 export const getArticle = async (id : any) => {
@@ -28,4 +27,11 @@ export const getArticle = async (id : any) => {
         date,
         content
     }
+}
+
+export const getPostsId = async () => {
+    const files = await fsPromise.readdir(mdPath)
+    return files.map(file => {
+        return file.replace(/\.md$/g, '')
+    })
 }

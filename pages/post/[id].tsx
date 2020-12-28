@@ -1,6 +1,6 @@
 import React from 'react';
-import {GetServerSideProps, NextPage} from 'next';
-import {getArticle} from '../../lib/post';
+import {NextPage} from 'next';
+import {getArticle, getPostsId} from '../../lib/post';
 type Props = {
     title: string,
     date: string,
@@ -18,9 +18,29 @@ const PostShow: NextPage<Props> = ({
 
 export default PostShow
 
-export const getServerSideProps:GetServerSideProps = async (context) => {
-    const { params } = context
-    const id = params?.id
+// export const getServerSideProps:GetServerSideProps = async (context) => {
+//     const { params } = context
+//     const id = params?.id
+//     const { title, date, content } = await getArticle(id)
+//     return {
+//         props: {
+//             title,
+//             date: JSON.stringify(date),
+//             content
+//         }
+//     }
+// }
+
+export const getStaticPaths = async () => {
+    const idLists = await getPostsId()
+    return {
+        paths: idLists.map(id => ({ params: { id } })),
+        fallback: true
+    }
+}
+
+export const getStaticProps = async (context: any) => {
+    const { params: { id } } = context
     const { title, date, content } = await getArticle(id)
     return {
         props: {
@@ -30,19 +50,5 @@ export const getServerSideProps:GetServerSideProps = async (context) => {
         }
     }
 }
-
-// export const getStaticPaths = async () => {
-//
-// }
-//
-// export const getStaticProps = async (context: any) => {
-//     console.log(context);
-//     // const posts = await getPosts()
-//     return {
-//         props: {
-//             posts: JSON.parse(JSON.stringify(1))
-//         }
-//     }
-// }
 
 
