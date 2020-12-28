@@ -35,7 +35,7 @@ export const getStaticPaths = async () => {
     const idLists = await getPostsId()
     return {
         paths: idLists.map(id => ({ params: { id } })),
-        fallback: true
+        fallback: true //是否兜底 true: 如果找不到对应的id则用ssr的方式进行查找，false: 直接返回404页面
     }
 }
 
